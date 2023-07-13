@@ -4,6 +4,7 @@ const catchAsync = require("../../utils/catchAsync");
 const appError = require("../../utils/appError");
 
 const { Configuration, OpenAIApi } = require("openai");
+const { verifyToken } = require("../../utils/middlewares");
 
 const apiKey = process.env.OPENAI_API_KEY;
 const organizationId = process.env.OPENAI_ORG_KEY;
@@ -14,6 +15,7 @@ const configuration = new Configuration({
 });
 
 router.route("/").post(
+  verifyToken,
   catchAsync(async (req, res, next) => {
     const { messages } = req.body;
     validateMessage(messages, next);

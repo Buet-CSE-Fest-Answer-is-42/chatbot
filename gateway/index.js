@@ -13,5 +13,5 @@ app.use("/pdf_server", proxy("http://localhost:4002"));
 app.use("/bot_server",proxy("http://localhost:4003"));
 
 app.listen(8000, () => {
-  console.log("Gateway is Listening to Port 8000".brightCyan);
+  console.log("Gateway is Listening to Port 4000".brightCyan);
 });

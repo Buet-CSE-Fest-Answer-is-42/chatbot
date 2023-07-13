@@ -7,9 +7,9 @@ router
   .post(userController.createUser)
   .get(userController.getAllUser);
 
-router.route("/:id").get(userController.getUser);
-
 router.route("/login").post(userController.loginUser);
 router.route("/verify").post(userController.verifyUser);
+
+router.route("/get/:id").get(userController.getUser);
 
 module.exports = router;

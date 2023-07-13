@@ -1,7 +1,10 @@
 const jwt = require("jsonwebtoken");
-
+const appError = require("./appError");
 const verifyToken = (req, res, next) => {
   const token = req.headers["authorization"];
+  if (!token) {
+    return next(new appError("Please provide token", 401));
+  }
   const bearer = token.split(" ");
   const bearerToken = bearer[1];
   if (!bearerToken) {

@@ -108,5 +108,10 @@ exports.loginUser = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     token,
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+    },
   });
 });
