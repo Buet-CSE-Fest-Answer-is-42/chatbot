@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:chatbot_frontend/helper/text_extractor.dart';
 import 'package:chatbot_frontend/providers/session_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +51,9 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isListening = false;
   bool isWaiting = false;
   bool isSpeaking = false;
+  bool isExpanded = false;
+
+  final FocusNode _focusNode = FocusNode();
   FlutterTts textToSpeech = FlutterTts();
 
   final TextEditingController controller = TextEditingController();
@@ -109,9 +113,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Chatbot"),
+        title: const Text("Chatbot"),
         actions: [
-          Icon(
+          const Icon(
             Icons.record_voice_over,
           ),
           Transform.scale(
@@ -130,65 +134,119 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Flexible(
-            child: ListView.builder(
-                reverse: true,
-                itemCount: messages.length,
-                padding: const EdgeInsets.only(
-                  bottom: 20,
-                ),
-                itemBuilder: (context, index) {
-                  return ChatWidget(
-                    role: messages[index].role,
-                    message: messages[index].content,
-                  );
-                }),
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: ListView.builder(
+                  reverse: true,
+                  itemCount: messages.length,
+                  padding: const EdgeInsets.only(
+                    bottom: 20,
+                  ),
+                  itemBuilder: (context, index) {
+                    return ChatWidget(
+                      role: messages[index].role,
+                      message: messages[index].content,
+                    );
+                  }),
+            ),
           ),
           if (isWaiting)
             Column(mainAxisSize: MainAxisSize.min, children: [
-              CircularProgressIndicator(),
-              Text("Waiting for Response..."),
-              SizedBox(
+              const CircularProgressIndicator(),
+              const Text("Waiting for Response..."),
+              const SizedBox(
                 height: 20,
               ),
             ]),
           Container(
-            color: Colors.blue,
+            height: 50,
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
             child: Row(children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-              ),
-              Flexible(
-                child: TextFormField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  controller: controller,
-                  decoration: InputDecoration(
-                    hintText: "Type a message...",
-                    fillColor: Colors.white,
-                    filled: true,
-                    enabledBorder: OutlineInputBorder(),
+              if (!isExpanded)
+                IconButton(
+                  onPressed: () async {
+                    await TextExtractor.fromFile().then((value) {
+                      if (value != null) {
+                        sendData(context, message: value);
+                      }
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.file_copy,
+                    color: Colors.white,
                   ),
                 ),
-              ),
-              AvatarGlow(
-                endRadius: 20.0,
-                animate: isListening,
-                curve: Curves.decelerate,
-                duration: const Duration(milliseconds: 1000),
-                repeatPauseDuration: const Duration(milliseconds: 100),
-                repeat: true,
-                showTwoGlows: true,
-                child: GestureDetector(
-                  onTap: _speechToText.isNotListening
-                      ? _startListening
-                      : _stopListening,
-                  child: Icon(
-                    isListening ? Icons.mic : Icons.mic_none,
+              if (!isExpanded)
+                IconButton(
+                  onPressed: () {
+                    TextExtractor.fromFile();
+                  },
+                  icon: const Icon(
+                    Icons.camera,
                     color: Colors.white,
+                  ),
+                ),
+              if (isExpanded)
+                IconButton(
+                  onPressed: () {
+                    _focusNode.unfocus();
+                    isExpanded = false;
+                    setState(() {});
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                ),
+              Flexible(
+                child: Focus(
+                  focusNode: _focusNode,
+                  onFocusChange: (value) {
+                    isExpanded = value;
+                    setState(() {});
+                  },
+                  child: TextFormField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    controller: controller,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(5),
+                        isDense: true,
+                        suffixIcon: AvatarGlow(
+                          endRadius: 20.0,
+                          animate: isListening,
+                          curve: Curves.decelerate,
+                          duration: const Duration(milliseconds: 1000),
+                          repeatPauseDuration:
+                              const Duration(milliseconds: 100),
+                          repeat: true,
+                          showTwoGlows: true,
+                          glowColor: Colors.blueAccent,
+                          child: GestureDetector(
+                            onTap: _speechToText.isNotListening
+                                ? _startListening
+                                : _stopListening,
+                            child: Icon(
+                              isListening ? Icons.mic : Icons.mic_none,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                        hintText: "Type a message...",
+                        fillColor: Colors.white,
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide:
+                              BorderSide(color: Colors.blueGrey, width: 2),
+                        )),
                   ),
                 ),
               ),
@@ -204,7 +262,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                   controller.clear();
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.send,
                   color: Colors.white,
                 ),
