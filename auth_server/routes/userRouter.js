@@ -10,5 +10,6 @@ router
 router.route("/:id").get(userController.getUser);
 
 router.route("/login").post(userController.loginUser);
+router.route("/verify").post(userController.verifyUser);
 
 module.exports = router;
