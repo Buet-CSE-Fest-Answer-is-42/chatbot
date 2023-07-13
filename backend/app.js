@@ -9,6 +9,7 @@ const errorController = require("./controllers/errorController");
 const appError = require("./utils/appError");
 
 const replyRouter = require("./routes/v1/getreply");
+const pdfGenarator = require("./routes/v1/pdfGenaration");
 
 app.use(
   cors({
@@ -24,6 +25,7 @@ if (process.env.NODE_ENV == "DEV") app.use(morgan("dev"));
 
 
 app.use("/api/v1/getreply", replyRouter);
+app.use("/api/v1/pdf", pdfGenarator);
 
 app.get("/", (req, res) => {
   res.status(200).json({
