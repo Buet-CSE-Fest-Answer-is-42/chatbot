@@ -3,16 +3,26 @@ const router = express.Router();
 const pdfController = require("../controllers/pdfController");
 const { verifyToken } = require("../utils/middlewares");
 
-router.post("/",  pdfController.createPdf);
+const rateLimit = require("express-rate-limit");
 
-router.get("/", verifyToken, pdfController.findAllBooks);
+const requestRateLimiter = rateLimit({
+    windowMs: 2000, // 15 min in milliseconds
+    max: 5,
+    message: `Too many requests from this IP, please try again after 2 second`,
+    statusCode: 429,
+    headers: true,
+});
 
-router.get("/user/:id", verifyToken, pdfController.findOneUser);
+router.post("/", requestRateLimiter, pdfController.createPdf);
 
-router.get("/book/:id", verifyToken, pdfController.findOneBook);
+router.get("/", verifyToken,requestRateLimiter, pdfController.findAllBooks);
 
-router.delete("/book/:id", verifyToken, pdfController.deleteOneBook);
+router.get("/user/:id", verifyToken,requestRateLimiter, pdfController.findOneUser);
 
-router.post("/share/:id", verifyToken, pdfController.shareBook);
+router.get("/book/:id", verifyToken,requestRateLimiter, pdfController.findOneBook);
+
+router.delete("/book/:id", verifyToken, requestRateLimiter,pdfController.deleteOneBook);
+
+router.post("/share/:id", verifyToken,requestRateLimiter, pdfController.shareBook);
 
 module.exports = router;

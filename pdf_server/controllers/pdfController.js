@@ -52,7 +52,9 @@ exports.findAllBooks = catchAsync(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 7;
 
-  let query = {};
+  let query = {
+    isShared: true,
+  };
 
   if (q) {
     query = {
@@ -60,6 +62,7 @@ exports.findAllBooks = catchAsync(async (req, res, next) => {
         { title: { $regex: q, $options: "i" } },
         { keywords: { $elemMatch: { $regex: q, $options: "i" } } },
       ],
+      isShared: true,
     };
   }
 
