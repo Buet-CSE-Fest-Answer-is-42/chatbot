@@ -1,4 +1,4 @@
-# Pixies: Conversational Chatbot and PDF Sharing Platform
+<img src="https://github.com/Buet-CSE-Fest-Answer-is-42/chatbot/assets/53055478/1715c5fa-bdee-44d2-b12f-eeab5fccc639" alt="star" style="height: 80px; width: 80px; "/> <h1> Pixies: Conversational Chatbot and PDF Sharing Platform</h1>
 
 ## Overview
 This project aims to develop a conversational chatbot with the ability to process voice commands and text input and provide responses in both text and speech formats. The chatbot utilizes advanced LLM and AI techniques and can generate a customized story-telling book with AI-generated images based on user prompts. The project also includes a PDF-sharing platform that allows users to browse, search, view, and download PDF documents without relying on a Content Delivery Network (CDN).
@@ -15,7 +15,7 @@ This project aims to develop a conversational chatbot with the ability to proces
    - Provides efficient searching using titles or keywords.
    - Does not rely on a Content Delivery Network (CDN) for PDF storage.
      
-##System Design
+## System Design
 The project features a modular architecture with three main service modules: 
 1. Authentication
 2. Pdf
@@ -30,7 +30,9 @@ The Bot module integrates language models and AI APIs to power a conversational 
 
 It runs on two database - User and PDF so that it can avoid single point failure and to manage loads efficiently.
 
-The system design diagram [available here](https://drive.google.com/file/d/1SbawCKdHk-OthCNwvHq3PQF3NbuIWFAD/view?usp=sharing) provides a visual representation of the project's architecture.
+Here is the system design below- 
+![Pixies drawio](https://github.com/Buet-CSE-Fest-Answer-is-42/chatbot/assets/53055478/92aa0181-205a-40f8-b9ed-12ac0d6e269e)
+
 
 The project focuses on modularity, security, with authentication measures and rate limiting and pagination in place to protect user data and ensure a safe user experience.
 
