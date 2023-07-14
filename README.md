@@ -14,6 +14,27 @@ This project aims to develop a conversational chatbot with the ability to proces
    - Allows users to browse, search, view, and download PDF documents.
    - Provides efficient searching using titles or keywords.
    - Does not rely on a Content Delivery Network (CDN) for PDF storage.
+     
+##System Design
+The project features a modular architecture with three main service modules: 
+1. Authentication
+2. Pdf
+3. Bot.
+Each module runs on a separate server to ensure scalability and performance.
+
+The Authentication module handles user sign-in and login processes, incorporating secure authentication mechanisms. Rate limiting is applied to protect against abuse and unauthorized access.
+
+The Pdf module enables users to search, browse, and view books. It supports searching by title or keywords and provides options to view both personal and available books. Users can also upload PDF files for sharing. Rate limiting is implemented to manage user interactions effectively.
+
+The Bot module integrates language models and AI APIs to power a conversational chatbot. It accepts voice commands or text inputs and responds in text or speech format. The module generates children's books with AI-generated images based on user prompts. Rate limiting ensures optimal API usage.
+
+It runs on two database - User and PDF so that it can avoid single point failure and to manage loads efficiently.
+
+The system design diagram (available here)[https://drive.google.com/file/d/1SbawCKdHk-OthCNwvHq3PQF3NbuIWFAD/view?usp=sharing] provides a visual representation of the project's architecture.
+
+The project focuses on modularity, security, with authentication measures and rate limiting and pagination in place to protect user data and ensure a safe user experience.
+
+Overall, the project aims to provide a user-friendly platform for accessing, sharing, and generating content, including PDF files and AI-generated children's books. The modular design allows for future expansion and the addition of new functionalities.
 
 ## API Extensibility
 The chatbot and PDF-sharing platform APIs are designed to be extensible for similar tasks or functionalities. Developers can leverage the existing architecture and add new features or extend existing functionalities to suit their requirements.
