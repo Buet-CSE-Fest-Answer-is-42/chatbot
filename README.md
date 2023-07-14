@@ -30,7 +30,7 @@ The Bot module integrates language models and AI APIs to power a conversational 
 
 It runs on two database - User and PDF so that it can avoid single point failure and to manage loads efficiently.
 
-The system design diagram (available here)[https://drive.google.com/file/d/1SbawCKdHk-OthCNwvHq3PQF3NbuIWFAD/view?usp=sharing] provides a visual representation of the project's architecture.
+The system design diagram [available here](https://drive.google.com/file/d/1SbawCKdHk-OthCNwvHq3PQF3NbuIWFAD/view?usp=sharing) provides a visual representation of the project's architecture.
 
 The project focuses on modularity, security, with authentication measures and rate limiting and pagination in place to protect user data and ensure a safe user experience.
 
