@@ -73,7 +73,11 @@ exports.findAllBooks = catchAsync(async (req, res, next) => {
   let pdfs = [];
 
   if (count > 0) {
-    pdfs = await Pdf.find(query).skip(skip).limit(limit).exec();
+    pdfs = await Pdf.find(query)
+      .sort({ $natural: -1 })
+      .skip(skip)
+      .limit(limit)
+      .exec();
   }
 
   res.json({
