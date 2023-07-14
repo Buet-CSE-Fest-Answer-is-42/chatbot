@@ -1,1 +1,5 @@
-String api_path = 'https://8626-103-180-245-254.ngrok-free.app/api/v1';
+import 'package:flutter/material.dart';
+
+String api_path = 'https://ba3c-103-217-111-248.ngrok-free.app';
+
+const kPrimaryColor = Colors.blue;
