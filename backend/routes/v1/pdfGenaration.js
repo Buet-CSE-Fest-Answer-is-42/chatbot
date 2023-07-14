@@ -13,6 +13,15 @@ const { jsPDF } = require("jspdf");
 const cloudinary = require("cloudinary").v2;
 const { verifyToken } = require("../../utils/middlewares");
 
+const rateLimit = require("express-rate-limit");
+
+const requestRateLimiter = rateLimit({
+  windowMs: 1000, // 15 min in milliseconds
+  max: 5,
+  message: `Too many requests from this IP, please try again after 1 second`,
+  statusCode: 429,
+  headers: true,
+});
 cloudinary.config({
   cloud_name: "kongkacloud",
   api_key: "293739775524848",
@@ -44,6 +53,8 @@ const configuration = new Configuration({
 });
 
 router.route("/").post(
+  verifyToken,
+  requestRateLimiter,
   catchAsync(async (req, res, next) => {
     const { story } = req.body;
     let genPrompt = `
@@ -115,12 +126,10 @@ router.route("/").post(
     });
     let keywords = keywordsResponse.data.choices[0].message.content;
 
-   
-
     let doc;
 
     try {
-      doc = await createPDF(temp,title);
+      doc = await createPDF(temp, title);
     } catch (e) {
       return next(new appError("Something went wrong", 400));
     }
@@ -131,7 +140,7 @@ router.route("/").post(
       title: title,
       description: story,
       file: result,
-      owner: "random",
+      owner: req.user.id || "64b03058ed14692f0d734ed4",
       keywords: [keywords],
     };
     const pdf = await axios.post(
@@ -202,7 +211,7 @@ const toBase64 = (doc) => {
 
 module.exports = router;
 
-async function createPDF(prompts,title) {
+async function createPDF(prompts, title) {
   const doc = new jsPDF();
   doc.setFontSize(25);
   doc.setFont("times", "bold");
