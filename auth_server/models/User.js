@@ -19,6 +19,12 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: () => Date.now(),
   },
+  // 4 digit otp
+  otp: {
+    type: String,
+    default: () => Math.floor(1000 + Math.random() * 9000).toString(),
+  },
+
   updatedAt: {
     type: Date,
     default: () => Date.now(),

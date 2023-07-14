@@ -4,6 +4,17 @@ const catchAsync = require("../../utils/catchAsync");
 const appError = require("../../utils/appError");
 
 const { Configuration, OpenAIApi } = require("openai");
+const { verifyToken } = require("../../utils/middlewares");
+
+const rateLimit = require("express-rate-limit");
+
+const requestRateLimiter = rateLimit({
+  windowMs: 1000, // 15 min in milliseconds
+  max: 5,
+  message: `Too many requests from this IP, please try again after 1 second`,
+  statusCode: 429,
+  headers: true,
+});
 
 const apiKey = process.env.OPENAI_API_KEY;
 const organizationId = process.env.OPENAI_ORG_KEY;
@@ -14,10 +25,19 @@ const configuration = new Configuration({
 });
 
 router.route("/").post(
+  verifyToken,
+  requestRateLimiter,
   catchAsync(async (req, res, next) => {
-    const { messages } = req.body;
+    let { messages, isStory } = req.body;
     validateMessage(messages, next);
-
+    if (isStory) {
+      // access the last element of th messages
+      let last = messages[messages.length - 1];
+      last.content = `${
+        last.conenet
+      } ${" \n"} give a title and make stickly 5 passage and every passage have no more than 100-150 words dont include passage number`;
+      messages.push(last);
+    }
     const openai = new OpenAIApi(configuration);
     const gptResponse = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",

@@ -2,6 +2,7 @@ const User = require("../models/User");
 const appError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const jwt = require("jsonwebtoken");
+const sendMail = require("../utils/mail");
 
 exports.createUser = catchAsync(async (req, res, next) => {
   console.log(req.body);
@@ -22,6 +23,31 @@ exports.createUser = catchAsync(async (req, res, next) => {
     email,
     password,
   });
+  const mail = {
+    subject: "Welcome to BotBot",
+    text: `Your OTP is ${user.otp}`,
+    html: `<h1>Your OTP is ${user.otp}</h1>`,
+  };
+  await sendMail(user.email, mail);
+  res.status(201).json({
+    status: "success",
+    data: {
+      user,
+    },
+  });
+});
+
+exports.verifyUser = catchAsync(async (req, res, next) => {
+  const { otp } = req.body;
+  if (!otp) {
+    return next(new appError("Please provide otp", 400));
+  }
+  const user = await User.findOne({ otp: otp });
+  if (!user) {
+    return next(new appError("Invalid otp", 401));
+  }
+  user.otp = null;
+  await user.save();
   res.status(200).json({
     status: "success",
     data: {
@@ -82,6 +108,10 @@ exports.loginUser = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     token,
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+    },
   });
 });
-

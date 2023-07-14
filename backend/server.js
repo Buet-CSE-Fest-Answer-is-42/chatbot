@@ -1,7 +1,7 @@
 // @ts-nocheck
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const colors = require('colors');
+const colors = require("colors");
 
 process.on("uncaughtException", (err) => {
   console.log("UNCAUGHT EXCEPTION! Shutting down...");
@@ -12,17 +12,17 @@ process.on("uncaughtException", (err) => {
 // if (process.env.NODE_ENV == "production") {
 //   dotenv.config({ path: ".env.production" });
 // } else {
-dotenv.config({ path: ".env" })
+dotenv.config({ path: ".env" });
 // }
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4003;
 
 const app = require("./app.js");
 const DB = process.env.DATABASE_REMOTE || process.env.DATABASE_LOCAL;
-;
-
 const server = app.listen(port, () => {
-  console.log(`App running on ${port} in ${process.env.NODE_ENV} mode....`.brightMagenta);
+  console.log(
+    `App running on ${port} in ${process.env.NODE_ENV} mode....`.brightMagenta
+  );
 });
 
 process.on("unhandledRejection", (err) => {
