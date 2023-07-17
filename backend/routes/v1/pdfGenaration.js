@@ -22,11 +22,12 @@ const requestRateLimiter = rateLimit({
   statusCode: 429,
   headers: true,
 });
-cloudinary.config({
-  cloud_name: "kongkacloud",
-  api_key: "293739775524848",
-  api_secret: "cHoLMYE8JKzbQR3inu_aLhXdVoc",
-});
+const storageConfig = {
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINAY_API_SECRET,
+}
+cloudinary.config(storageConfig);
 
 const uploadImage = async (imagePath) => {
   const options = {

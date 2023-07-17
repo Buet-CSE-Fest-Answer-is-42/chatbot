@@ -34,7 +34,7 @@ router.route("/").post(
       // access the last element of th messages
       let last = messages[messages.length - 1];
       last.content = `${
-        last.conenet
+        last.content
       } ${" \n"} give a title and make stickly 5 passage and every passage have no more than 100-150 words dont include passage number`;
       messages.push(last);
     }
